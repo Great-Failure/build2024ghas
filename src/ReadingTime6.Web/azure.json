@@ -7,40 +7,67 @@
       "metadata": {
         "description": "Web Application Name"
       }
+    },
+    "environment": {
+      "type": "string",
+      "allowedValues": [
+        "production",
+        "staging",
+        "development"
+      ],
+      "metadata": {
+        "description": "Deployment environment name"
+      }
     }
   },
-  "variables": {},
+  "variables": {
+    "webAppServicePlanName": "[concat(parameters('webAppName'), '-', parameters('environment'), '-service-plan')]",
+    "webAppServicePlanId": "[resourceId('Microsoft.Web/serverfarms', variables('webAppServicePlanName'))]",
+    "webAppSiteName": "[concat(parameters('webAppName'), '-', parameters('environment'))]",
+    "sku": {
+      "production": "S1",
+      "staging": "S1",
+      "development": "F1"
+    },
+    "skuCapacity": {
+      "production": 2,
+      "staging": 2,
+      "development": 1
+    }
+  },
   "resources": [
     {
-      "name": "[parameters('webAppName')]",
-      "type": "Microsoft.Web/sites",
-      "apiVersion": "2016-08-01",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', 'ghdemo-plan')]"
-      ],
-      "properties": {
-        "name": "[parameters('webAppName')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', 'ghdemo-plan')]"
-      }
-    },
-    {
-      "name": "ghdemo-plan",
+      "name": "[variables('webAppServicePlanName')]",
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2018-02-01",
       "location": "[resourceGroup().location]",
       "sku": {
-        "name": "S1",
-        "capacity": 1
-      },
-      "tags": {
-        "displayName": "demo"
+        "name": "[variables('sku')[parameters('environment')]]",
+        "capacity": "[variables('skuCapacity')[parameters('environment')]]"
       },
       "properties": {
-        "name": "ghdemo-plan"
+        "name": "[variables('webAppServicePlanName')]"
+      }
+    },
+    {
+      "name": "[variables('webAppSiteName')]",
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2016-08-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[variables('webAppServicePlanId')]"
+      ],
+      "properties": {
+        "name": "[variables('webAppSiteName')]",
+        "serverFarmId": "[variables('webAppServicePlanId')]"
       }
     }
   ],
-  "outputs": {},
+  "outputs": {
+    "webAppUrl": {
+      "type": "string",
+      "value": "[concat('https://', variables('webAppSiteName'), '.azurewebsites.net')]"
+    }
+  },
   "functions": []
 }
