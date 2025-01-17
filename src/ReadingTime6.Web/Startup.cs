@@ -11,7 +11,7 @@ namespace ReadingTime6.Web
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            var pat = "eiufgbweiflbeyfgbyvlyivyeufveyvfewvVVFEF344";
+            // Removed hardcoded PAT for security reasons
         }
 
         public IConfiguration Configuration { get; }

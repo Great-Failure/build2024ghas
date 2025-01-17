@@ -259,3 +259,13 @@ In this last exercise, you'll fix as many errors as possible that were detected 
 GitHub Advanced Security will surface existing vulnerabilities and flag potential new problems before they're merged into your code. Keep your applications secure is a journey, not a destination. Tools like GHAS are an enormous help. But you are the key contributor to your team's and organization's success in building secure solutions.
 
 Thank you for taking the time to run through this lab.
+
+## Additional Security Measures
+
+### Removing Hardcoded Personal Access Tokens (PATs)
+
+Hardcoding personal access tokens (PATs) in your code is a security risk. Instead, use environment variables or secret management tools to store and access sensitive information.
+
+### Updating Encryption Algorithms
+
+Using outdated or weak encryption algorithms can compromise the security of your application. Ensure that you are using strong and up-to-date encryption algorithms, such as AES, to protect sensitive data.
