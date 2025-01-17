@@ -7,14 +7,17 @@ namespace ReadingTime6.Web.Services
     {
         public static byte[] encryptString()
         {
-            SymmetricAlgorithm serviceProvider = new DESCryptoServiceProvider();
-            byte[] key = { 16, 22, 240, 11, 18, 150, 192, 21 };
-            serviceProvider.Key = key;
-            ICryptoTransform encryptor = serviceProvider.CreateEncryptor();
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = new byte[] { 16, 22, 240, 11, 18, 150, 192, 21, 16, 22, 240, 11, 18, 150, 192, 21 };
+                aesAlg.IV = new byte[] { 21, 192, 150, 18, 11, 240, 22, 16, 21, 192, 150, 18, 11, 240, 22, 16 };
 
-            String message = "Hello World";
-            byte[] messageB = System.Text.Encoding.ASCII.GetBytes(message);
-            return encryptor.TransformFinalBlock(messageB, 0, messageB.Length);
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                string message = "Hello World";
+                byte[] messageB = System.Text.Encoding.ASCII.GetBytes(message);
+                return encryptor.TransformFinalBlock(messageB, 0, messageB.Length);
+            }
         }
     }
 }
